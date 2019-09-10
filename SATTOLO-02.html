@@ -1,0 +1,526 @@
+<STYLE>
+#info > DIV {
+	float:left;
+	width:20px;
+	font-size: 11px;
+	font-family: "courier new"
+}
+
+.comercial {
+	color:#F00;
+}
+</STYLE>
+<center>
+    <button onclick="nextSong()">Next song</button>
+    <audio
+            id="player"
+            controls="true"
+            preload="auto"
+            controlsList="nodownload"
+            autostart="true"
+            autoplay="false"
+    ></audio>
+
+    <div id="songName"></div>
+	
+	<div id="info" style="display: none;"></div>
+	
+	
+    <table style="display:none;">
+        <tr>
+            <td><textarea id="info1" rows="40"></textarea></td>
+            <td><textarea id="info2" rows="40"></textarea></td>
+        </tr>
+    </table>
+	
+	<button onclick="nextRound()" style="display:none;">Next Round</button>
+
+    <script type="text/javascript">
+
+		_ultJ=-1;
+
+     
+        const reproductor = document.getElementById("player");
+        var RAMDOM = 1;
+        const data = {
+            comerciales: [
+                [
+                    {
+                        TRACKS: 1, //Entrandas a comerciales
+                        lista: [
+                            "ENTRADAS/001.mp3",
+                            "ENTRADAS/002.mp3",
+                            "ENTRADAS/003.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+                ],
+                [
+                    // Array que contiene los grupos de comerciales
+                    {
+                        TRACKS: 2, // Comerciales 0
+                        lista: [
+                            "INTERMEDIO-1/001.mp3",
+                            "INTERMEDIO-1/002.mp3",
+                            "INTERMEDIO-1/003.mp3",
+                            "INTERMEDIO-1/004.mp3",
+                            "INTERMEDIO-1/005.mp3",
+                            "INTERMEDIO-1/006.mp3",
+                            "INTERMEDIO-1/007.mp3",
+                            "INTERMEDIO-1/008.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 2, // Comerciales 1
+                        lista: [
+                            "INTERMEDIO-2/001.mp3",
+                            "INTERMEDIO-2/002.mp3",
+                            "INTERMEDIO-2/003.mp3",
+                            "INTERMEDIO-2/004.mp3",
+                            "INTERMEDIO-2/005.mp3",
+                            "INTERMEDIO-2/006.mp3",
+                            "INTERMEDIO-2/007.mp3",
+                            "INTERMEDIO-2/008.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+                ],
+                [
+                    //Array que contiene las salidas de comerciales para los diferentes géneros
+                    {
+                        TRACKS: 1, // Salidas de comerciales para salsa
+                        lista: [
+                            "SALIDAS/SALSA-1.mp3",
+                            "SALIDAS/SALSA-2.mp3",
+                            "SALIDAS/SALSA-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 1,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para merengue
+                        lista: [
+                            "SALIDAS/MERENGUE-1.mp3",
+                            "SALIDAS/MERENGUE-2.mp3",
+                            "SALIDAS/MERENGUE-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 1,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para reggae
+                        lista: [
+                            "SALIDAS/REGGAE-1.mp3",
+                            "SALIDAS/REGGAE-2.mp3",
+                            "SALIDAS/REGGAE-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    },
+					  {
+						TRACKS: 1, // Salidas de comerciales para musica en Ballenato
+						lista: [
+						  "SALIDAS/BALLENATO-1.mp3",
+						  "SALIDAS/BALLENATO-2.mp3",
+						  "SALIDAS/BALLENATO-3.mp3"
+						],
+						reproducidas: [],
+						conteo: 0,
+						ultima: ""
+					  },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para musica en ingles
+                        lista: [
+                            "SALIDAS/80-1.mp3",
+                            "SALIDAS/80-2.mp3",
+                            "SALIDAS/80-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+					
+                ]
+            ],
+            generos: [
+                {
+                    TRACKS: 2, // Género 1 Salsa
+                    lista: [
+                        "SALSA/001.ogg",
+                        "SALSA/002.ogg",
+                        "SALSA/003.ogg",
+                        "SALSA/004.ogg",
+                        "SALSA/005.ogg",
+                        "SALSA/006.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [0, 1, 1, 1 ,1],
+                    assistance: [],
+                },
+                {
+                    TRACKS: 2, // Género 2 Merengue
+                    lista: [
+                        "MERENGUE/001.ogg",
+                        "MERENGUE/002.ogg",
+                        "MERENGUE/003.ogg",
+                        "MERENGUE/004.ogg",
+                        "MERENGUE/005.ogg",
+                        "MERENGUE/006.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 0, 1, 1, 1],
+                    assistance: [],
+                },
+                {
+                    TRACKS: 2, // Género 3 Reggae
+                    lista: [
+                        "REGGAE/001.mp3",
+                        "REGGAE/002.mp3",
+                        "REGGAE/003.mp3",
+                        "REGGAE/004.mp3",
+                        "REGGAE/005.mp3",
+                        "REGGAE/006.mp3"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 1, 0, 1, 1],
+                    assistance: [],
+                },
+				{
+				  TRACKS: 1, // Género 5 Ballenato
+				  lista: [
+					"BALLENATO/001.mp3",
+					"BALLENATO/002.mp3",
+					"BALLENATO/003.mp3"
+				  ],
+				  reproducidas: [],
+				  conteo: 0,
+				  ultima: "",
+				  AUSENTE_PRESENTE: [1, 1, 1, 1, 0],
+				  assistance: [],
+				},
+                {
+                    TRACKS: 4, // Género 4 MÃºsica En InglÃ©s
+                    lista: [
+                        "708090/001.ogg",
+                        "708090/002.ogg",
+                        "708090/003.ogg",
+                        "708090/004.ogg",
+                        "708090/005.ogg",
+                        "708090/006.ogg",
+                        "708090/007.ogg",
+                        "708090/008.ogg",
+                        "708090/009.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 1, 1, 1, 0],
+                    assistance: [],
+                }
+            ]
+        };
+
+
+        const e = {
+            i: 0, // Ãndice de generos
+            j: -1,   // sequence index
+            c: 0, //Ãndice de comerciales
+            cancion: true, // Reproducir canciÃ³n o intermedio
+            clase: 0, // 0=Entradas, 1=Comerciales y 2=Salidas
+            start: true,   // start a sequence
+            first_round: true,
+            next_gender: -1,   // index of next gender to play
+            play_seq: [[-1]],   // to check similarity
+            c_rec: 0   // recursive calls counter
+        };
+
+		function nextRound(){
+			e.i=0;
+			e.j=-1;
+			e.cancion=false;
+			e.start=true;
+			first_round: true,
+			e.c=0;		
+			e.clase=0;
+			e.next_gender= -1;
+ 			reproducirCancion()
+		}
+		
+		function shuffle(arr) {
+		  var i, j, temp;
+		  for (i = arr.length - 1; i > 0; i--) {
+			j = Math.floor(Math.random() * (i + 1));
+			temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		  }
+		  return arr;
+		}
+		
+		function shuffleSattolo(arr1) {
+
+            arr=arr1.slice(0);
+            var i, j, temp;
+            for (i = 0; i<arr.length-1; ++i) {
+                j = (i+1) + Math.floor(Math.random() * (arr.length - 1  - i));
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+			console.log(arr);
+            return arr;
+        }
+
+        async function reproducirCancion() {
+
+            
+             if (e.start) {   // make a first shuffle
+                    //if (RAMDOM == 1) {
+					//last_play_seq=[[-1]];
+					last_play_seq=e.play_seq.slice(0);
+                    e.play_seq=[];
+                    e.c_rec = 0;
+                    for (let j = 0; j < data.generos[0].AUSENTE_PRESENTE.length; j++) {
+                        e.play_seq.push([]);
+                        for (let i = 0; i < data.generos.length; i++) {
+                            if (data.generos[i].AUSENTE_PRESENTE[j] && data.generos[i].TRACKS) {
+                                e.play_seq[j].push(i);
+                            }
+                        }
+                    }
+                    e.j++;
+                    
+					last_item = last_play_seq[last_play_seq.length-1];
+					//showInfo();
+					
+                    if (RAMDOM == 1) e.play_seq = await sattoloCycle(e.play_seq, last_item);
+					e.next_gender = e.play_seq[0][0]
+
+                    e.start = false;   // no more initial actions, turn off
+                    //}
+                }
+				
+				
+				
+            if (e.cancion) {
+							
+                let g_index = e.play_seq[e.j][e.i];
+                if (data.generos[g_index].lista.length) {
+                    if (data.generos[g_index].conteo == 0) {
+                        data.generos[g_index].lista = shuffle(data.generos[g_index].lista);
+                    }
+                    if (data.generos[g_index].conteo < data.generos[g_index].TRACKS) {
+                        let cancionActual = data.generos[g_index].lista[0];
+                        if (data.generos[g_index].ultima == cancionActual) {
+                            return reproducirCancion();
+                        }
+                        document.getElementById("songName").innerHTML =
+                            "Genero: " + e.i + " Track " + cancionActual;
+                        data.generos[g_index].reproducidas.push(cancionActual);
+                        data.generos[g_index].ultima = cancionActual;
+                        data.generos[g_index].lista.splice(0, 1);
+                        reproductor.src = cancionActual;
+                        data.generos[g_index].conteo += 1;
+                        const playPromise = reproductor.play();
+						showInfo(); // --------------------
+                        return playPromise;
+                    } else {
+                        // Hacer conteo cero
+                        data.generos[g_index].conteo = 0;
+                        // Cambiar al siguiente genero con e.i += 1
+                        e.i += 1;
+                        if (e.i == e.play_seq[e.j].length) {
+                            e.i = 0;
+                            //e.j = 0;
+                            e.c_rec = 0;
+                            let last_item = e.play_seq[e.j][e.play_seq[e.j].length - 1];
+                            e.j++;
+                            
+
+
+                        }
+                        if (e.j == data.generos[0].AUSENTE_PRESENTE.length) {
+							nextRound()
+							
+						} else {	
+							e.next_gender = e.play_seq[e.j][e.i];
+							// Reproducir intermedio con e.cancion = false
+							e.cancion = false;
+							return reproducirCancion();
+						}
+                    }
+                } else {
+                    // Mover de reproducidas a lista
+                    data.generos[g_index].lista = data.generos[g_index].reproducidas;
+                    data.generos[g_index].reproducidas = [];
+                    // Reproducir primera canciÃ³n de lista
+                    return reproducirCancion();
+                }
+            } else {
+			
+				// Reproducir comerciales
+				
+				
+                if (e.clase == data.comerciales.length) {
+                    e.clase = 0;
+                    e.c = 0;
+                    e.cancion = true;
+                    return reproducirCancion();
+                }
+				
+                if (e.clase == 2) {
+                    e.c = e.next_gender;
+                }
+				
+                if (data.comerciales[e.clase][e.c].lista.length) {
+                    
+					if (data.comerciales[e.clase][e.c].conteo < data.comerciales[e.clase][e.c].TRACKS) {
+                        let indice = Math.floor(Math.random() * data.comerciales[e.clase][e.c].lista.length);
+                        let entradaActual = data.comerciales[e.clase][e.c].lista[indice];
+                        if (data.comerciales[e.clase][e.c].ultima == entradaActual) {
+                            return reproducirCancion();
+                        }
+                        document.getElementById("songName").innerHTML =
+                            "Comercial " + e.clase + " " + e.c + " Track " + entradaActual;
+                        data.comerciales[e.clase][e.c].reproducidas.push(entradaActual);
+                        data.comerciales[e.clase][e.c].ultima = entradaActual;
+                        data.comerciales[e.clase][e.c].lista.splice(indice, 1);
+                        reproductor.src = entradaActual;
+                        data.comerciales[e.clase][e.c].conteo += 1;
+                        if (e.clase == 2) {
+                            data.comerciales[e.clase][e.c].conteo = 0;
+                            //e.clase = data.comerciales.length;
+							e.clase++;
+                        }
+						showInfo(); // --------------------
+                        return reproductor.play();
+                    } else {
+                        data.comerciales[e.clase][e.c].conteo = 0;
+                        if (e.clase == 2) {
+                            //e.clase = data.comerciales.length;
+                        } else {
+                            e.c += 1;
+                        }
+                        
+						if (e.clase < data.comerciales.length && e.c == data.comerciales[e.clase].length) {
+                            e.c = 0;
+                            e.clase += 1;
+                        }
+                        return reproducirCancion();
+                    }
+                } else {
+                    data.comerciales[e.clase][e.c].lista = data.comerciales[e.clase][e.c].reproducidas;
+                    data.comerciales[e.clase][e.c].reproducidas = [];
+                    return reproducirCancion();
+                }
+            }
+        }
+
+        window.addEventListener("load", reproducirCancion);
+        reproductor.addEventListener("ended", reproducirCancion);
+
+        function nextSong() {
+            reproducirCancion();
+        }
+
+
+        function sattoloCycle(prev_play_seq, last_item ) {
+
+			//alert(1);
+
+            //let play_seq = [];
+            let play_seq = [];
+
+            //last_item ;
+            for (let i = 0; i < prev_play_seq.length; i++) {
+
+				c=0;
+                do {
+					c++;
+					//if (c>1) alert(i + ".- " +play_seq_item[0] + " " + last_item[last_item.length-1])
+                    play_seq_item = shuffleSattolo(prev_play_seq[i]);
+                    if (e.first_round && i==0) { break; }
+					
+                } while(play_seq_item[0]==last_item[last_item.length-1]);
+				
+                last_item = play_seq_item.slice(0);
+                play_seq.push(last_item);
+            }
+
+
+            e.first_round=false;
+            return play_seq;
+            
+        }
+
+		_enDiv=null;
+		_poner=['S','M','R','B','I']
+		_comer=['E','I','S','S','4']
+		_last_l=null;
+		_c4=-1;
+		
+        function showInfo() {
+		
+			if (_ultJ!=e.j){
+				_enDiv=document.createElement('DIV');
+				document.getElementById('info').appendChild(_enDiv)
+				_ultJ=e.j;
+				if(_c4!=-1) _c4=6;
+				else _c4=0;
+			}
+			
+			
+			if(e.cancion){
+				_l=_poner[e.play_seq[e.j][e.i]];
+				_l='<a>'+_l+'</a><br>';
+				_L=_l;
+			}else {
+				_l=_comer[e.clase];
+				tc=_l;
+				if (tc=='S')tc+=_poner[e.next_gender]
+				_l='<a class="comercial">'+tc+'</a><br>';
+				_L='C';
+			}
+			
+			if (_last_l!=_L){
+				for(t=_c4; t<6;++t){
+				var A = document.createElement('A');
+					A.innerHTML='-<br>'
+					_enDiv.appendChild(A);
+				}
+				_c4=0;
+			}
+			_c4++;
+			
+			
+			_last_l=_L
+			
+			var B = document.createElement('B');
+			B.innerHTML=_l
+			_enDiv.appendChild(B);                              // Append the text to <li>
+			//_enDiv.appendChild(node);  
+			//_enDiv.appendChild('<a>'+_l+'</a>')
+			
+		
+            var jsonPretty = JSON.stringify(e, null, 2);
+            info1.innerHTML = info2.innerHTML
+            info2.innerHTML = jsonPretty
+        }
+    </script>
+</center>
