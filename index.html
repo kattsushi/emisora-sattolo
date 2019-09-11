@@ -1,0 +1,331 @@
+<STYLE>
+    #info>DIV {
+        float: left;
+        width: 20px;
+        font-size: 11px;
+        font-family: "courier new"
+    }
+
+    .comercial {
+        color: #F00;
+    }
+</STYLE>
+<center>
+    <button onclick="nextSong()">Next song</button>
+    <audio id="player" controls="true" preload="auto" controlsList="nodownload" autostart="true" autoplay="false"></audio>
+    <div id="songName"></div>
+    <div id="info" style="display: none;"></div>
+    <table style="display:none;">
+        <tr>
+            <td><textarea id="info1" rows="40"></textarea></td>
+            <td><textarea id="info2" rows="40"></textarea></td>
+        </tr>
+    </table>
+    <button onclick="nextRound()" style="display:none;">Next Round</button>
+
+    <script type="text/javascript">
+        /** 
+         * Variables globales
+        */
+        let RAMDOM = 1;
+        let _ultJ = -1;
+        let _enDiv = null;
+        /** 
+         * TODO: Refactorizar estos valores para que se generen dinamicamente. 
+         */
+        let _poner = ['S', 'M', 'R', 'B', 'I']
+        let _comer = ['E', 'I', 'S', 'S', '4']
+        let _last_l = null;
+        let _c4 = -1;
+        let data;
+        let indiceDeGeneros = 0; // Indice de generos
+        let indiceDeSequencia = -1; // Indice de Secuencia
+        let indiceDeComerciales = 0; // Indice de Comerciales
+        let esCancion = true; // Es una Cancion o Comercial / intermedio
+        let clase = 0 // 0=Entradas, 1=Comerciales y 2=Salidas
+        let empiezaSequencia = true; // Empieza una sequencia
+        let primeraRonda = true; // Es primera ronda
+        let indiceSiguienteGenero = -1; // Indice del siguiente Genero
+        let playSecuencia = [[-1]] // para checar similaridad
+        let contadorLlamadasRecursivas = 0; // Contador de llamadas recursivas
+        /** 
+         * Constantes Globales
+         */
+        const DATA_URL = 'data.json';
+        const reproductor = document.getElementById("player");
+        /** 
+         * @Function getData : 
+         *  Llamada Http Ajax para obtener los datos desde el servidor
+         * TODO: conectarlo con la fuenta en el servidor con PHP.
+        */
+        const getData = async () => {
+            const res = await fetch(`./${DATA_URL}`);
+            return await res.json();
+        }
+
+        reproductor.addEventListener("ended", reproducirCancion);
+
+        getData().then((e) => {
+            data = e;
+            reproducirCancion();
+        });
+
+        async function reproducirCancion() {
+            reproductor.async
+            if (empiezaSequencia) {   // make a first shuffle
+                //if (RAMDOM == 1) {
+                //last_play_seq=[[-1]];
+                last_play_seq = playSecuencia.slice(0);
+                playSecuencia = [];
+                contadorLlamadasRecursivas = 0;
+                for (let j = 0; j < data.generos[0].AUSENTE_PRESENTE.length; j++) {
+                    playSecuencia.push([]);
+                    for (let i = 0; i < data.generos.length; i++) {
+                        if (data.generos[i].AUSENTE_PRESENTE[j] && data.generos[i].TRACKS) {
+                            playSecuencia[j].push(i);
+                        }
+                    }
+                }
+                indiceDeSequencia++;
+
+                last_item = last_play_seq[last_play_seq.length - 1];
+                //showInfo();
+
+                if (RAMDOM == 1) playSecuencia = await sattoloCycle(playSecuencia, last_item);
+                indiceSiguienteGenero = playSecuencia[0][0]
+
+                empiezaSequencia = false;   // no more initial actions, turn off
+                //}
+            }
+
+            if (esCancion) {
+                let g_index = playSecuencia[indiceDeSequencia][indiceDeGeneros];
+                if (data.generos[g_index].lista.length) {
+                    if (data.generos[g_index].conteo == 0) {
+                        data.generos[g_index].lista = shuffle(data.generos[g_index].lista);
+                    }
+                    if (data.generos[g_index].conteo < data.generos[g_index].TRACKS) {
+                        let cancionActual = data.generos[g_index].lista[0];
+                        if (data.generos[g_index].ultima == cancionActual) {
+                            return reproducirCancion();
+                        }
+                        document.getElementById("songName").innerHTML =
+                            "Genero: " + indiceDeGeneros + " Track " + cancionActual;
+                        data.generos[g_index].reproducidas.push(cancionActual);
+                        data.generos[g_index].ultima = cancionActual;
+                        data.generos[g_index].lista.splice(0, 1);
+                        reproductor.src = cancionActual;
+                        data.generos[g_index].conteo += 1;
+                        const playPromise = reproductor.play().catch();
+                        showInfo(); // --------------------
+                        return playPromise;
+                    } else {
+                        // Hacer conteo cero
+                        data.generos[g_index].conteo = 0;
+                        // Cambiar al siguiente genero con indiceDeGeneros += 1
+                        indiceDeGeneros += 1;
+                        if (indiceDeGeneros == playSecuencia[indiceDeSequencia].length) {
+                            indiceDeGeneros = 0;
+                            //indiceDeSequencia = 0;
+                            contadorLlamadasRecursivas = 0;
+                            let last_item = playSecuencia[indiceDeSequencia][playSecuencia[indiceDeSequencia].length - 1];
+                            indiceDeSequencia++;
+                        }
+                        if (indiceDeSequencia == data.generos[0].AUSENTE_PRESENTE.length) {
+                            nextRound()
+                        } else {
+                            indiceSiguienteGenero = playSecuencia[indiceDeSequencia][indiceDeGeneros];
+                            // Reproducir intermedio con esCancion = false
+                            esCancion = false;
+                            return reproducirCancion();
+                        }
+                    }
+                } else {
+                    // Mover de reproducidas a lista
+                    data.generos[g_index].lista = data.generos[g_index].reproducidas;
+                    data.generos[g_index].reproducidas = [];
+                    // Reproducir primera canciÃ³n de lista
+                    return reproducirCancion();
+                }
+            } else {
+                // Reproducir comerciales
+                if (clase == data.comerciales.length) {
+                    clase = 0;
+                    indiceDeComerciales = 0;
+                    esCancion = true;
+                    return reproducirCancion();
+                }
+
+                if (clase == 2) {
+                    indiceDeComerciales = indiceSiguienteGenero;
+                }
+
+                if (data.comerciales[clase][indiceDeComerciales].lista.length) {
+
+                    if (data.comerciales[clase][indiceDeComerciales].conteo < data.comerciales[clase][indiceDeComerciales].TRACKS) {
+                        let indice = Math.floor(Math.random() * data.comerciales[clase][indiceDeComerciales].lista.length);
+                        let entradaActual = data.comerciales[clase][indiceDeComerciales].lista[indice];
+                        if (data.comerciales[clase][indiceDeComerciales].ultima == entradaActual) {
+                            return reproducirCancion();
+                        }
+                        document.getElementById("songName").innerHTML =
+                            "Comercial " + clase + " " + indiceDeComerciales + " Track " + entradaActual;
+                        data.comerciales[clase][indiceDeComerciales].reproducidas.push(entradaActual);
+                        data.comerciales[clase][indiceDeComerciales].ultima = entradaActual;
+                        data.comerciales[clase][indiceDeComerciales].lista.splice(indice, 1);
+                        reproductor.src = entradaActual;
+                        data.comerciales[clase][indiceDeComerciales].conteo += 1;
+                        if (clase == 2) {
+                            data.comerciales[clase][indiceDeComerciales].conteo = 0;
+                            //clase = data.comerciales.length;
+                            clase++;
+                        }
+                        showInfo(); // --------------------
+                        return reproductor.play().catch();
+                    } else {
+                        data.comerciales[clase][indiceDeComerciales].conteo = 0;
+                        if (clase == 2) {
+                            //clase = data.comerciales.length;
+                        } else {
+                            indiceDeComerciales += 1;
+                        }
+                        
+                        if (clase < data.comerciales.length && indiceDeComerciales == data.comerciales[clase].length) {
+                            indiceDeComerciales = 0;
+                            clase += 1;
+                        }
+                        return reproducirCancion();
+                    }
+                } else {
+                    data.comerciales[clase][indiceDeComerciales].lista = data.comerciales[clase][indiceDeComerciales].reproducidas;
+                    data.comerciales[clase][indiceDeComerciales].reproducidas = [];
+                    return reproducirCancion();
+                }
+            }
+        }
+        
+        function sattoloCycle(prev_play_seq, last_item) {
+            //alert(1);
+            //let play_seq = [];
+            let play_seq = [];
+            //last_item ;
+            for (let i = 0; i < prev_play_seq.length; i++) {
+                c = 0;
+                do {
+                    c++;
+                    //if (c>1) alert(i + ".- " +play_seq_item[0] + " " + last_item[last_item.length-1])
+                    play_seq_item = shuffleSattolo(prev_play_seq[i]);
+                    if (primeraRonda && i == 0) { break; }
+                    
+                } while (play_seq_item[0] == last_item[last_item.length - 1]);
+                
+                last_item = play_seq_item.slice(0);
+                play_seq.push(last_item);
+            }
+            primeraRonda = false;
+            return play_seq;
+        }
+        
+        function shuffle(arr) {
+            var i, j, temp;
+            for (i = arr.length - 1; i > 0; i--) {
+                j = Math.floor(Math.random() * (i + 1));
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+
+        function nextRound() {
+            indiceDeGeneros = 0;
+            indiceDeSequencia = -1;
+            esCancion = false;
+            empiezaSequencia = true;
+            primeraRonda = true,
+            indiceDeComerciales = 0;
+            clase = 0;
+            indiceSiguienteGenero = -1;
+            reproducirCancion()
+        }
+
+
+        function shuffleSattolo(arr1) {
+
+            arr = arr1.slice(0);
+            var i, j, temp;
+            for (i = 0; i < arr.length - 1; ++i) {
+                j = (i + 1) + Math.floor(Math.random() * (arr.length - 1 - i));
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            console.log(arr);
+            return arr;
+        }
+
+        // window.addEventListener("load", reproducirCancion);
+        function showInfo() {
+
+            if (_ultJ != indiceDeSequencia) {
+                _enDiv = document.createElement('DIV');
+                document.getElementById('info').appendChild(_enDiv)
+                _ultJ = indiceDeSequencia;
+                if (_c4 != -1) _c4 = 6;
+                else _c4 = 0;
+            }
+
+
+            if (esCancion) {
+                _l = _poner[playSecuencia[indiceDeSequencia][indiceDeGeneros]];
+                _l = '<a>' + _l + '</a><br>';
+                _L = _l;
+            } else {
+                _l = _comer[clase];
+                tc = _l;
+                if (tc == 'S') tc += _poner[indiceSiguienteGenero]
+                _l = '<a class="comercial">' + tc + '</a><br>';
+                _L = 'C';
+            }
+
+            if (_last_l != _L) {
+                for (t = _c4; t < 6; ++t) {
+                    var A = document.createElement('A');
+                    A.innerHTML = '-<br>'
+                    _enDiv.appendChild(A);
+                }
+                _c4 = 0;
+            }
+            _c4++;
+
+
+            _last_l = _L
+
+            var B = document.createElement('B');
+            B.innerHTML = _l
+            _enDiv.appendChild(B);                              // Append the text to <li>
+            // _enDiv.appendChild(node);  
+            // _enDiv.appendChild('<a>'+_l+'</a>')
+
+
+            var jsonPretty = JSON.stringify({
+                indiceDeGeneros, // Indice de generos
+                indiceDeSequencia, // Indice de Secuencia
+                indiceDeComerciales, // Indice de Comerciales
+                esCancion, // Es una Cancion o Comercial / intermedio
+                clase,// 0=Entradas, 1=Comerciales y 2=Salidas
+                empiezaSequencia, // Empieza una sequencia
+                primeraRonda, // Es primera ronda
+                indiceSiguienteGenero, // Indice del siguiente Genero
+                playSecuencia, // para checar similaridad
+                contadorLlamadasRecursivas, // Contador de llamadas recursivas
+            }, null, 2);
+            info1.innerHTML = info2.innerHTML
+            info2.innerHTML = jsonPretty
+        }
+
+        function nextSong() {
+            reproducirCancion();
+        }
+    </script>
+</center>

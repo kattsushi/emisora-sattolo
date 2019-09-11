@@ -1,0 +1,220 @@
+{
+  "comerciales": [
+    [
+      {
+        "TRACKS": 1,
+        "lista": [
+          "ENTRADAS/001.mp3",
+          "ENTRADAS/002.mp3",
+          "ENTRADAS/003.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      }
+    ],
+    [
+      {
+        "TRACKS": 2,
+        "lista": [
+          "INTERMEDIO-1/001.mp3",
+          "INTERMEDIO-1/002.mp3",
+          "INTERMEDIO-1/003.mp3",
+          "INTERMEDIO-1/004.mp3",
+          "INTERMEDIO-1/005.mp3",
+          "INTERMEDIO-1/006.mp3",
+          "INTERMEDIO-1/007.mp3",
+          "INTERMEDIO-1/008.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      },
+      {
+        "TRACKS": 2,
+        "lista": [
+          "INTERMEDIO-2/001.mp3",
+          "INTERMEDIO-2/002.mp3",
+          "INTERMEDIO-2/003.mp3",
+          "INTERMEDIO-2/004.mp3",
+          "INTERMEDIO-2/005.mp3",
+          "INTERMEDIO-2/006.mp3",
+          "INTERMEDIO-2/007.mp3",
+          "INTERMEDIO-2/008.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      }
+    ],
+    [
+      {
+        "TRACKS": 1,
+        "lista": [
+          "SALIDAS/SALSA-1.mp3",
+          "SALIDAS/SALSA-2.mp3",
+          "SALIDAS/SALSA-3.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 1,
+        "ultima": ""
+      },
+      {
+        "TRACKS": 1,
+        "lista": [
+          "SALIDAS/MERENGUE-1.mp3",
+          "SALIDAS/MERENGUE-2.mp3",
+          "SALIDAS/MERENGUE-3.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 1,
+        "ultima": ""
+      },
+      {
+        "TRACKS": 1,
+        "lista": [
+          "SALIDAS/REGGAE-1.mp3",
+          "SALIDAS/REGGAE-2.mp3",
+          "SALIDAS/REGGAE-3.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      },
+      {
+        "TRACKS": 1,
+        "lista": [
+          "SALIDAS/BALLENATO-1.mp3",
+          "SALIDAS/BALLENATO-2.mp3",
+          "SALIDAS/BALLENATO-3.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      },
+      {
+        "TRACKS": 1,
+        "lista": [
+          "SALIDAS/80-1.mp3",
+          "SALIDAS/80-2.mp3",
+          "SALIDAS/80-3.mp3"
+        ],
+        "reproducidas": [],
+        "conteo": 0,
+        "ultima": ""
+      }
+    ]
+  ],
+  "generos": [
+    {
+      "TRACKS": 2,
+      "lista": [
+        "SALSA/001.ogg",
+        "SALSA/002.ogg",
+        "SALSA/003.ogg",
+        "SALSA/004.ogg",
+        "SALSA/005.ogg",
+        "SALSA/006.ogg"
+      ],
+      "reproducidas": [],
+      "conteo": 0,
+      "ultima": "",
+      "AUSENTE_PRESENTE": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "assistance": []
+    },
+    {
+      "TRACKS": 2,
+      "lista": [
+        "MERENGUE/001.ogg",
+        "MERENGUE/002.ogg",
+        "MERENGUE/003.ogg",
+        "MERENGUE/004.ogg",
+        "MERENGUE/005.ogg",
+        "MERENGUE/006.ogg"
+      ],
+      "reproducidas": [],
+      "conteo": 0,
+      "ultima": "",
+      "AUSENTE_PRESENTE": [
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      "assistance": []
+    },
+    {
+      "TRACKS": 2,
+      "lista": [
+        "REGGAE/001.mp3",
+        "REGGAE/002.mp3",
+        "REGGAE/003.mp3",
+        "REGGAE/004.mp3",
+        "REGGAE/005.mp3",
+        "REGGAE/006.mp3"
+      ],
+      "reproducidas": [],
+      "conteo": 0,
+      "ultima": "",
+      "AUSENTE_PRESENTE": [
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "assistance": []
+    },
+    {
+      "TRACKS": 1,
+      "lista": [
+        "BALLENATO/001.mp3",
+        "BALLENATO/002.mp3",
+        "BALLENATO/003.mp3"
+      ],
+      "reproducidas": [],
+      "conteo": 0,
+      "ultima": "",
+      "AUSENTE_PRESENTE": [
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "assistance": []
+    },
+    {
+      "TRACKS": 4,
+      "lista": [
+        "708090/001.ogg",
+        "708090/002.ogg",
+        "708090/003.ogg",
+        "708090/004.ogg",
+        "708090/005.ogg",
+        "708090/006.ogg",
+        "708090/007.ogg",
+        "708090/008.ogg",
+        "708090/009.ogg"
+      ],
+      "reproducidas": [],
+      "conteo": 0,
+      "ultima": "",
+      "AUSENTE_PRESENTE": [
+        1,
+        1,
+        1,
+        1,
+        0
+      ],
+      "assistance": []
+    }
+  ]
+}
