@@ -24,6 +24,200 @@
     <button onclick="nextRound()" style="display:none;">Next Round</button>
 
     <script type="text/javascript">
+        const data = {
+            comerciales: [
+                [
+                    {
+                        TRACKS: 1, //Entrandas a comerciales
+                        lista: [
+                            "ENTRADAS/001.mp3",
+                            "ENTRADAS/002.mp3",
+                            "ENTRADAS/003.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+                ],
+                [
+                    // Array que contiene los grupos de comerciales
+                    {
+                        TRACKS: 2, // Comerciales 0
+                        lista: [
+                            "INTERMEDIO-1/001.mp3",
+                            "INTERMEDIO-1/002.mp3",
+                            "INTERMEDIO-1/003.mp3",
+                            "INTERMEDIO-1/004.mp3",
+                            "INTERMEDIO-1/005.mp3",
+                            "INTERMEDIO-1/006.mp3",
+                            "INTERMEDIO-1/007.mp3",
+                            "INTERMEDIO-1/008.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 2, // Comerciales 1
+                        lista: [
+                            "INTERMEDIO-2/001.mp3",
+                            "INTERMEDIO-2/002.mp3",
+                            "INTERMEDIO-2/003.mp3",
+                            "INTERMEDIO-2/004.mp3",
+                            "INTERMEDIO-2/005.mp3",
+                            "INTERMEDIO-2/006.mp3",
+                            "INTERMEDIO-2/007.mp3",
+                            "INTERMEDIO-2/008.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+                ],
+                [
+                    //Array que contiene las salidas de comerciales para los diferentes géneros
+                    {
+                        TRACKS: 1, // Salidas de comerciales para salsa
+                        lista: [
+                            "SALIDAS/SALSA-1.mp3",
+                            "SALIDAS/SALSA-2.mp3",
+                            "SALIDAS/SALSA-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 1,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para merengue
+                        lista: [
+                            "SALIDAS/MERENGUE-1.mp3",
+                            "SALIDAS/MERENGUE-2.mp3",
+                            "SALIDAS/MERENGUE-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 1,
+                        ultima: ""
+                    },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para reggae
+                        lista: [
+                            "SALIDAS/REGGAE-1.mp3",
+                            "SALIDAS/REGGAE-2.mp3",
+                            "SALIDAS/REGGAE-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    },
+					  {
+						TRACKS: 1, // Salidas de comerciales para musica en Ballenato
+						lista: [
+						  "SALIDAS/BALLENATO-1.mp3",
+						  "SALIDAS/BALLENATO-2.mp3",
+						  "SALIDAS/BALLENATO-3.mp3"
+						],
+						reproducidas: [],
+						conteo: 0,
+						ultima: ""
+					  },
+                    {
+                        TRACKS: 1, // Salidas de comerciales para musica en ingles
+                        lista: [
+                            "SALIDAS/80-1.mp3",
+                            "SALIDAS/80-2.mp3",
+                            "SALIDAS/80-3.mp3"
+                        ],
+                        reproducidas: [],
+                        conteo: 0,
+                        ultima: ""
+                    }
+					
+                ]
+            ],
+            generos: [
+                {
+                    TRACKS: 2, // Género 1 Salsa
+                    lista: [
+                        "SALSA/001.ogg",
+                        "SALSA/002.ogg",
+                        "SALSA/003.ogg",
+                        "SALSA/004.ogg",
+                        "SALSA/005.ogg",
+                        "SALSA/006.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [0, 1, 1, 1 ,1],
+                    assistance: [],
+                },
+                {
+                    TRACKS: 2, // Género 2 Merengue
+                    lista: [
+                        "MERENGUE/001.ogg",
+                        "MERENGUE/002.ogg",
+                        "MERENGUE/003.ogg",
+                        "MERENGUE/004.ogg",
+                        "MERENGUE/005.ogg",
+                        "MERENGUE/006.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 0, 1, 1, 1],
+                    assistance: [],
+                },
+                {
+                    TRACKS: 2, // Género 3 Reggae
+                    lista: [
+                        "REGGAE/001.mp3",
+                        "REGGAE/002.mp3",
+                        "REGGAE/003.mp3",
+                        "REGGAE/004.mp3",
+                        "REGGAE/005.mp3",
+                        "REGGAE/006.mp3"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 1, 0, 1, 1],
+                    assistance: [],
+                },
+				{
+				  TRACKS: 1, // Género 5 Ballenato
+				  lista: [
+					"BALLENATO/001.mp3",
+					"BALLENATO/002.mp3",
+					"BALLENATO/003.mp3"
+				  ],
+				  reproducidas: [],
+				  conteo: 0,
+				  ultima: "",
+				  AUSENTE_PRESENTE: [1, 1, 1, 1, 0],
+				  assistance: [],
+				},
+                {
+                    TRACKS: 4, // Género 4 MÃºsica En InglÃ©s
+                    lista: [
+                        "708090/001.ogg",
+                        "708090/002.ogg",
+                        "708090/003.ogg",
+                        "708090/004.ogg",
+                        "708090/005.ogg",
+                        "708090/006.ogg",
+                        "708090/007.ogg",
+                        "708090/008.ogg",
+                        "708090/009.ogg"
+                    ],
+                    reproducidas: [],
+                    conteo: 0,
+                    ultima: "",
+                    AUSENTE_PRESENTE: [1, 1, 1, 1, 0],
+                    assistance: [],
+                }
+            ]
+        };
+        
         /** 
          * Variables globales
         */
@@ -33,11 +227,11 @@
         /** 
          * TODO: Refactorizar estos valores para que se generen dinamicamente. 
          */
-        let _poner = ['S', 'M', 'R', 'B', 'I']
-        let _comer = ['E', 'I', 'S', 'S', '4']
+        let _poner = []; // ['S', 'M', 'R', 'B', 'I']
+        let _comer = []; //['E', 'I', 'S', 'S', '4']
         let _last_l = null;
         let _c4 = -1;
-        let data;
+        // let data;
         let indiceDeGeneros = 0; // Indice de generos
         let indiceDeSequencia = -1; // Indice de Secuencia
         let indiceDeComerciales = 0; // Indice de Comerciales
@@ -58,17 +252,28 @@
          *  Llamada Http Ajax para obtener los datos desde el servidor
          * TODO: conectarlo con la fuenta en el servidor con PHP.
         */
-        const getData = async () => {
-            const res = await fetch(`./${DATA_URL}`);
-            return await res.json();
-        }
+        // const getData = async () => {
+        //     const res = await fetch(`./${DATA_URL}`);
+        //     return await res.json();
+        // }
 
         reproductor.addEventListener("ended", reproducirCancion);
 
-        getData().then((e) => {
-            data = e;
-            reproducirCancion();
+        // getData().then((e) => {
+        _comer = [];
+        data.comerciales.map(e => {
+            e[0].lista.map(l => {
+                _comer.push(l[0]);
+            });
         });
+        _poner = [];
+        data.generos.map(e => {
+            e.lista.map(l => {
+                _poner.push(l[0]);
+            });
+        });
+        reproducirCancion();
+        // });
 
         async function reproducirCancion() {
             reproductor.async
