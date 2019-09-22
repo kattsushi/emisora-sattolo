@@ -266,12 +266,14 @@
                 _comer.push(l[0]);
             });
         });
+        _comer = shuffleSattolo(_comer);
         _poner = [];
         data.generos.map(e => {
             e.lista.map(l => {
                 _poner.push(l[0]);
             });
         });
+        _poner = shuffleSattolo(_poner);
         reproducirCancion();
         // });
 
